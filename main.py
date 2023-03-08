@@ -5,6 +5,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from yolov3 import YOLO
 from collections import deque
+from ftp import ftp
+from generate_data import data
+import os
 
 # ---------------------------------------------------#
 #  初始化
@@ -20,7 +23,6 @@ COLORS = np.random.randint(0, 255, size=(200, 3), dtype='uint8')
 pts = [deque(maxlen=30) for _ in range(9999)]
 # 帧率
 fps = 0
-
 # ---------------------------------------------------#
 #  虚拟线圈统计车流量
 # ---------------------------------------------------#
@@ -40,7 +42,6 @@ counter = 0
 counter_up = 0
 # 逆向车道的车辆数据
 counter_down = 0
-
 # ---------------------------------------------------#
 #  读取视频并获取基本信息
 # ---------------------------------------------------#
@@ -62,6 +63,7 @@ except:
 #  逐帧检测并追踪
 # ---------------------------------------------------#
 while True:
+    
     (ret, frame) = cap.read()
     if not ret:
         break
@@ -105,12 +107,21 @@ while True:
                     counter_down += 1
                 else:
                     counter_up += 1
+        #输出数据到txt文件            
+      #  with open('data.txt','w') as file:
+       #     file.truncate()
+       #     file.write((str(num))I + ',' + time.strftime('%H:%M:%S') + '\n')    
+ 
+ 
+   
     #显示结果
     cv2.line(frame, line[0], line[1], (0, 255, 0), 2)
     cv2.putText(frame, str(counter), (20, 90), 0, 0.8, (255, 0, 0), 2)
     cv2.putText(frame, str(counter_up), (200, 90), 0, 0.8, (0, 255, 0), 2)
     cv2.putText(frame, str(counter_down), (450, 90), 0, 0.8, (0, 0, 255), 2)
     cv2.putText(frame, "Current Car Counter: " + str(num), (int(20), int(40)), 0, 5e-1, (0, 255, 0), 2)
+    data(num)
+    ftp()
     cv2.putText(frame, "FPS: %f" %(fps), (int(20),int(20)), 0, 5e-1, (0,255,0), 2)
     cv2.namedWindow("YOLOV3-SORT", 0)
     cv2.resizeWindow('YOLOV3-SORT', 1280, 720)
