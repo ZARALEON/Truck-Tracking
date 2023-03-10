@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEMO</title>
+</head>
+
+<body>
+    
+<div style="display: none" id="data">{{ data }}</div>
+<canvas id="canvas"></canvas>
+</body>
+
+</html>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        display: flex;
+        width: 100%;
+        height: 100vh;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    canvas {
+        border: 1px solid gray;
+    }
+</style>
+
+<script>
+    window.onload = function () {
+        const data_lst = document.getElementById('data').innerText
+        console.log(typeof data_lst)
+
+        var canvas = document.getElementById("canvas")
+        var ctx = canvas.getContext("2d")
+        canvas.width = 1200
+        canvas.height = 600
+        var data = []
+        ctx.font = "15px sans-serif"
+        ctx.textAlign = "right"
+        ctx.fillStyle = "gray"
+        var data_list = JSON.parse(data_lst)
+
+        function init() {
+            ctx.beginPath()
+            ctx.moveTo(100, 500)
+            ctx.lineTo(100, 100)
+            ctx.moveTo(100, 500)
+            ctx.lineTo(1100, 500)
+            ctx.stroke()
+            ctx.beginPath()
+            for (var i = 0; i <= 10; i++) {
+                ctx.moveTo(100, i * 40 + 100)
+                ctx.lineTo(1100, i * 40 + 100)
+                ctx.fillText(10 - i, 90, i * 40 + 107)
+            }
+
+            for (var i = 0; i < data_list.length; i++) {
+                data.push(data_list[i].y)
+                ctx.moveTo(i * (1000 / data_list.length) + 100, 100)
+                ctx.lineTo(i * (1000 / data_list.length) + 100, 500)
+                ctx.fillStyle = "gray"
+                ctx.fillText(data_list[i].x, i * (1000 / data_list.length) + 115, 520)
+                ctx.fillStyle = "#2ed573"
+                ctx.fillText((data[i]) | 0, i * (1000 / data_list.length) + 115, 90)
+
+            }
+            ctx.lineWidth = 0.2
+            ctx.stroke()
+        }
+
+        function draw() {
+            ctx.beginPath()
+            ctx.lineWidth = 2
+            ctx.strokeStyle = "green"
+            for (var i = 0; i < data.length; i++) {
+                ctx.lineTo(i * (1000 / data.length) + 100, (10 - data[i]) * 40 + 100)
+            }
+            ctx.fillStyle = "rgba(0,255,0,0.3)"
+            ctx.stroke()
+            for (var i = 0; i < data.length; i++) {
+                ctx.beginPath()
+                ctx.arc(i * (1000 / data.length) + 100, (10 - data[i]) * 40 + 100, 2, 0, 100, 0)
+                ctx.fillStyle = "white"
+                ctx.fill()
+                ctx.stroke()
+            }
+        }
+
+        init()
+        draw()
+        setInterval(function () {
+            location.reload()
+        }, 1000);
+    }
+</script>

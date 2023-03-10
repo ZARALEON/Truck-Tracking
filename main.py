@@ -1,13 +1,17 @@
-from sort import Sort
+#内部函数
 import time 
 import cv2
+import os
 import numpy as np
-import matplotlib.pyplot as plt
-from yolov3 import YOLO
 from collections import deque
+import matplotlib.pyplot as plt
+
+#外部函数或类
+from yolov3 import YOLO
+from sort import Sort
 from ftp import ftp
 from generate_data import data
-import os
+
 
 # ---------------------------------------------------#
 #  初始化
@@ -45,7 +49,7 @@ counter_down = 0
 # ---------------------------------------------------#
 #  读取视频并获取基本信息
 # ---------------------------------------------------#
-cap = cv2.VideoCapture("./input/test_1.mp4")
+cap = cv2.VideoCapture("./input/test.mp4")
 try:
     total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     print("[INFO] total {} Frame in video".format(total))
@@ -77,6 +81,7 @@ while True:
         tracks = tracker.update(dets)
     
     num = 0
+    
     for track in tracks:
         bbox = track[:4] # 跟踪框坐标
         indexID = int(track[4]) # 跟踪编号
@@ -107,28 +112,24 @@ while True:
                     counter_down += 1
                 else:
                     counter_up += 1
-        #输出数据到txt文件            
-      #  with open('data.txt','w') as file:
-       #     file.truncate()
-       #     file.write((str(num))I + ',' + time.strftime('%H:%M:%S') + '\n')    
  
- 
-   
     #显示结果
     cv2.line(frame, line[0], line[1], (0, 255, 0), 2)
     cv2.putText(frame, str(counter), (20, 90), 0, 0.8, (255, 0, 0), 2)
     cv2.putText(frame, str(counter_up), (200, 90), 0, 0.8, (0, 255, 0), 2)
     cv2.putText(frame, str(counter_down), (450, 90), 0, 0.8, (0, 0, 255), 2)
-    cv2.putText(frame, "Current Car Counter: " + str(num), (int(20), int(40)), 0, 5e-1, (0, 255, 0), 2)
-    data(num)
+    cv2.putText(frame, "Current Truck Counter: " + str(num), (int(20), int(40)), 0, 5e-1, (0, 255, 0), 2)
+
+    data(num)         #执行数据记录以及数据上传功能
     ftp()
+
     cv2.putText(frame, "FPS: %f" %(fps), (int(20),int(20)), 0, 5e-1, (0,255,0), 2)
-    cv2.namedWindow("YOLOV3-SORT", 0)
-    cv2.resizeWindow('YOLOV3-SORT', 1280, 720)
+    cv2.namedWindow("DEMO", 0)
+    cv2.resizeWindow('DEMO', 1280, 720)
     # 计算帧率
     fps = (fps + (1. / (time.time() - t1))) / 2
     writer.write(frame)
-    cv2.imshow('YOLOV3-SORT', frame)
+    cv2.imshow('DEMO', frame)
     # Q键停止
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break

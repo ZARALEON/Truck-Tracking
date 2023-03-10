@@ -1,3 +1,4 @@
+#该函数记录下对应时刻的大货车数量并保存为文本文件。
 import time
 import os
 

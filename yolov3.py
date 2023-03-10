@@ -1,3 +1,4 @@
+#使用yoloV3模型进行目标检测
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
@@ -61,16 +62,5 @@ class YOLO(object):
                 if self.labelsName[classIDs[i]] == self.className:
                     (x, y) = (boxes[i][0], boxes[i][1])
                     (w, h) = (boxes[i][2], boxes[i][3])
-                    # color = [int(c) for c in self.COLORS[i % len(self.COLORS)]]
-                    # cv2.rectangle(frame, (x, y), (x+w, y+h), color, 2)
                     dets.append([x, y, x + w, y + h, confidences[i]])
-        
-        # plt.imshow(frame[:,:,::-1])
-        # plt.show()
         return np.array(dets)
-
-
-# if __name__ == "__main__":
-#     yolo = YOLO()
-#     frame = cv2.imread("./images/car1.jpg")
-#     print(yolo.predict(frame))
